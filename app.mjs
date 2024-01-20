@@ -1,4 +1,9 @@
 import mysql from 'mysql2/promise';
+import { locationsConverter } from './utils/locationConverter.mjs';
+//TODO: Remove when finished
+// import data from './data.json' assert { type: "json" };
+
+
 
 import express from 'express';
 const app = express();
@@ -40,7 +45,7 @@ app.get('/foodata', async (req, res) => {
       INNER JOIN towns ON towns.id = frames.towns_id;`
     );
   
-    console.log(results); // results contains rows returned by server
+    console.log(locationsConverter(results)); // results contains rows returned by server
     //console.log(fields); // fields contains extra meta data about results, if available
     res.send(results);
   } catch (err) {
