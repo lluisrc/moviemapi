@@ -36,12 +36,17 @@ app.get('/locations', async (req, res) => {
       files.title, 
       files.director, 
       files.start, 
+      files.end, 
       files.company, 
-      towns.town
+      towns.town,
+      regions.region, 
+      states.state
 
       FROM frames
       INNER JOIN files ON files.id = frames.files_id
-      INNER JOIN towns ON towns.id = frames.towns_id;`
+      INNER JOIN towns ON towns.id = frames.towns_id
+      INNER JOIN regions ON region.id = frames.regions_id
+      INNER JOIN states ON states.id = frames.states_id;`
     );
 
     console.log(locationsConverter(results)); // results contains rows returned by server
