@@ -1,7 +1,6 @@
 import mysql from 'mysql2/promise';
 import { locationsConverter } from './utils/locationConverter.mjs';
 //TODO: Remove when finished
-import data from './data.json' assert { type: "json" };
 import express from 'express';
 import cors from 'cors';
 
@@ -36,7 +35,7 @@ app.get('/locations', async (req, res) => {
       files.title, 
       files.director, 
       files.start, 
-      files.end, 
+      files.finish, 
       files.company, 
       towns.town,
       regions.region, 
@@ -45,7 +44,7 @@ app.get('/locations', async (req, res) => {
       FROM frames
       INNER JOIN files ON files.id = frames.files_id
       INNER JOIN towns ON towns.id = frames.towns_id
-      INNER JOIN regions ON region.id = frames.regions_id
+      INNER JOIN regions ON regions.id = frames.regions_id
       INNER JOIN states ON states.id = frames.states_id;`
     );
 
