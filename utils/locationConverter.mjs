@@ -15,6 +15,8 @@ export const locationsConverter = (locations) => {
             producer: location.company,
             place: location.place,
             town: location.town,
+            region: location.region,
+            state: location.state,
             gallery: gallery
         });
     });
