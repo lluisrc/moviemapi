@@ -1,11 +1,10 @@
 import mysql from 'mysql2/promise';
 import { locationsConverter } from './utils/locationConverter.mjs';
 //TODO: Remove when finished
-// import data from './data.json' assert { type: "json" };
-
-
-
+import data from './data.json' assert { type: "json" };
 import express from 'express';
+import cors from 'cors';
+
 const app = express();
 const port = 3000;
 
@@ -18,10 +17,10 @@ const connection = await mysql.createConnection({
 
 // Middleware to parse JSON requests
 app.use(express.json());
-
+app.use(cors());
 
 // Sample route with a dynamic parameter
-app.get('/foodata', async (req, res) => {
+app.get('/locations', async (req, res) => {
   // A simple SELECT query
   try {
     const [results, fields] = await connection.query(
@@ -44,10 +43,10 @@ app.get('/foodata', async (req, res) => {
       INNER JOIN files ON files.id = frames.files_id
       INNER JOIN towns ON towns.id = frames.towns_id;`
     );
-  
+
     console.log(locationsConverter(results)); // results contains rows returned by server
     //console.log(fields); // fields contains extra meta data about results, if available
-    res.send(results);
+    res.send(locationsConverter(results));
   } catch (err) {
     console.log(err);
   }

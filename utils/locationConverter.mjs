@@ -5,7 +5,7 @@ export const locationsConverter = (locations) => {
         for(let i = 1; i <= 5; i++){
             if(`frame${i}` in location && location[`frame${i}`]) gallery.push(location[`frame${i}`])
         }
-        locations.push({
+        convertedLocations.push({
             latitude: location.latitud,
             longitude: location.longitud,
             title: location.title,
