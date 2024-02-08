@@ -3,20 +3,20 @@ export const locationsConverter = (locations) => {
     locations.map(location => {
         let gallery = []
         for(let i = 1; i <= 5; i++){
-            if(`frame${i}` in location && location[`frame${i}`]) gallery.push(location[`frame${i}`])
+            if(`frames_frame${i}` in location && location[`frames_frame${i}`]) gallery.push(location[`frames_frame${i}`])
         }
         convertedLocations.push({
-            latitude: location.latitud,
-            longitude: location.longitud,
-            title: location.title,
-            director: location.director,
-            start: location.start,
-            end: location.end,
-            producer: location.company,
-            place: location.place,
-            town: location.town,
-            region: location.region,
-            state: location.state,
+            latitude: location.frames_latitude,
+            longitude: location.frames_longitude,
+            title: location.files_title,
+            director: location.files_director,
+            start: location.files_start,
+            end: location.files_finish,
+            producer: location.files_company,
+            place: location.frames_place,
+            town: location.towns_town,
+            region: location.regions_region,
+            state: location.states_state,
             gallery: gallery
         });
     });
