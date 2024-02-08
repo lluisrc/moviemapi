@@ -32,7 +32,7 @@ app.get('/locations', async (req, res) => {
     );
 
     // console.log(locationsConverter(results)); // results contains rows returned by server
-    // console.log(fields); // fields contains extra meta data about results, if available
+    console.log(results); // fields contains extra meta data about results, if available
     res.send(locationsConverter(results));
     // res.send(results);
   } catch (err) {
