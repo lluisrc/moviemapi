@@ -29,6 +29,7 @@ export const locationsConverter = (locations) => {
             region: location.regions_region,
             state: location.states_state,
             gallery: gallery,
+            sponsors: sponsors,
             links: links,
         });
     });
