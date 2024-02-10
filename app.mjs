@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 import { locationsConverter } from './utils/locationConverter.mjs';
+import { routesConverter} from './utils/routeConverter.mjs';
 import express from 'express';
 import cors from 'cors';
 
@@ -118,7 +119,7 @@ app.get('/getAllLocationsFromRoute', async (req, res) => {
     // console.log(fields); // fields contains extra meta data about results, if available
     // res.send(locationsConverter(results));
     res.send(locationsConverter(results));
-    
+
   } catch (err) {
     console.log(err);
   }
