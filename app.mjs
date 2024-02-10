@@ -1,6 +1,5 @@
 import mysql from 'mysql2/promise';
 import { locationsConverter } from './utils/locationConverter.mjs';
-//TODO: Remove when finished
 import express from 'express';
 import cors from 'cors';
 
@@ -35,11 +34,8 @@ app.get('/getAllLocations', async (req, res) => {
       INNER JOIN sponsors3 ON sponsors3.sponsors3_id = frames.frames_sponsors3_id
       ;`
     );
-
-    // console.log(locationsConverter(results)); // results contains rows returned by server
-    console.log(results); // fields contains extra meta data about results, if available
     res.send(locationsConverter(results));
-    // res.send(results);
+
   } catch (err) {
     console.log(err);
   }
@@ -64,7 +60,8 @@ app.get('/getAllSavedLocations', async (req, res) => {
       INNER JOIN sponsors3 ON sponsors3.sponsors3_id = frames.frames_sponsors3_id
       WHERE saved.saved_users_id = 1;`
     );
-    res.send(results);
+    res.send(locationsConverter(results));
+
   } catch (err) {
     console.log(err);
   }
@@ -89,7 +86,8 @@ app.get('/getAllRoutes', async (req, res) => {
     // console.log(locationsConverter(results)); // results contains rows returned by server
     // console.log(fields); // fields contains extra meta data about results, if available
     // res.send(locationsConverter(results));
-    res.send(results);
+    res.send(routesConverter(results));
+
   } catch (err) {
     console.log(err);
   }
@@ -119,7 +117,8 @@ app.get('/getAllLocationsFromRoute', async (req, res) => {
     // console.log(locationsConverter(results)); // results contains rows returned by server
     // console.log(fields); // fields contains extra meta data about results, if available
     // res.send(locationsConverter(results));
-    res.send(results);
+    res.send(locationsConverter(results));
+    
   } catch (err) {
     console.log(err);
   }
