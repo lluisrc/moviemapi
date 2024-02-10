@@ -1,14 +1,19 @@
 export const locationsConverter = (locations) => {
     let convertedLocations = [];
     locations.map(location => {
-        let gallery = []
+        let gallery = [];
         for(let i = 1; i <= 5; i++){
             if(`frames_frame${i}` in location && location[`frames_frame${i}`]) gallery.push(location[`frames_frame${i}`])
         }
-        let sponsors = []
+         //TODO: Falta recibir datos de sponsors (uri y sponsors.png)
+        let sponsors = [];
         for(let i = 1; i <= 5; i++){
             if(`frames_frame${i}` in location && location[`frames_frame${i}`]) sponsors.push(location[`frames_frame${i}`])
         }
+        //TODO: Falta recibir imdb.png y justWatch.png y campo files_filmserie formateado ("pelicula", "serie") en minúsculas y sin acentos
+        let links = [{href: `https://www.imdb.com/title/${location.files_imdb}/`}, {href: `https://www.justwatch.com/es/${location.files_filmserie}/${location.files_wheretowatchurl}/`}];
+
+
 
         convertedLocations.push({
             id: location.frames_id,
@@ -23,7 +28,9 @@ export const locationsConverter = (locations) => {
             town: location.towns_town,
             region: location.regions_region,
             state: location.states_state,
-            gallery: gallery
+            gallery: gallery,
+            sponsors: sponsors,
+            links: links,
         });
     });
     return convertedLocations;
