@@ -9,10 +9,10 @@ const app = express();
 const port = 3005;
 
 const connection = await mysql.createConnection({
-  host: '192.168.178.53',
+  host: 'moviemapp.tv',
   user: 'lroca',
-  database: 'moviedev',
-  password: 'lroca',
+  database: 'moviemapp',
+  password: 'kebabmixtosolocarne',
 });
 
 // Middleware to parse JSON requests
@@ -130,16 +130,20 @@ app.get('/getRouteLocations', async (req, res) => {
   }
 });
 
-app.get('/getLocationIsSaved', async (req, res) => {
+app.get('/isLocationSaved', async (req, res) => {
   const { locationId = 0, userId= 0 } = req.query;
   // A simple SELECT query
   try {
     const [results, fields] = await connection.query(
       //Mostrar si una localización se encuentra guardada por el usuario
       // Falta seleccionar los campos de *
+      `SELECT * FROM moviemapp.saved WHERE saved_frames_id = ${locationId} AND saved_users_id = ${userId};`
       );
-
-    res.send(results);
+      let response = {"isLocationSaved":false}
+      if(results[0]){
+        response.isLocationSaved = true
+      }
+      res.json(response);
 
   } catch (err) {
     console.log(err);
