@@ -4,6 +4,7 @@ import { routesConverter} from './utils/routeConverter.mjs';
 import express from 'express';
 import cors from 'cors';
 
+
 const app = express();
 const port = 3005;
 
@@ -19,7 +20,7 @@ app.use(express.json());
 app.use(cors());
 
 // Sample route with a dynamic parameter
-app.get('/getAllLocations', async (req, res) => {
+app.get('/getLocations', async (req, res) => {
   // A simple SELECT query
   try {
     const [results, fields] = await connection.query(
@@ -42,13 +43,13 @@ app.get('/getAllLocations', async (req, res) => {
   }
 });
 
-
-
-app.get('/getAllSavedLocations', async (req, res) => {
+app.get('/getSavedLocations', async (req, res) => {
   try {
+    const { userId = 0 } = req.query;
+
     const [results, fields] = await connection.query(
       `SELECT *
-      FROM moviedev.saved 
+      FROM moviedev.saved
       INNER JOIN users ON users.users_id = saved.saved_users_id
       INNER JOIN frames ON frames.frames_id = saved.saved_frames_id
       INNER JOIN files ON files.files_id = frames.frames_files_id
@@ -59,7 +60,7 @@ app.get('/getAllSavedLocations', async (req, res) => {
       INNER JOIN sponsors1 ON sponsors1.sponsors1_id = frames.frames_sponsors1_id
       INNER JOIN sponsors2 ON sponsors2.sponsors2_id = frames.frames_sponsors2_id
       INNER JOIN sponsors3 ON sponsors3.sponsors3_id = frames.frames_sponsors3_id
-      WHERE saved.saved_users_id = 1;`
+      WHERE saved.saved_users_id = ${userId};`
     );
     res.send(locationsConverter(results));
 
@@ -68,9 +69,11 @@ app.get('/getAllSavedLocations', async (req, res) => {
   }
 });
 
-app.get('/getAllRoutes', async (req, res) => {
+app.get('/getRoutes', async (req, res) => {
   // A simple SELECT query
   try {
+    const { userId = 0 } = req.query;
+
     const [results, fields] = await connection.query(
       //Mostrar las listas de localizaciones del usuario con id = 1 (usuario test)
       // Falta seleccionar los campos de *
@@ -81,7 +84,7 @@ app.get('/getAllRoutes', async (req, res) => {
        WHERE locationslist.locationslist_name = l.locationslist_name
          AND locationslist.locationslist_users_id = 1) AS total_locations
       FROM locationslist l
-      WHERE locationslist_users_id = 1;`
+      WHERE locationslist_users_id = ${userId};`
       //Aquí nos interesa información sobre algún frame incluido en las listas? por ejemplo si queremos enseñar un frame como portada o una localización en el titulo
     );
     // console.log(locationsConverter(results)); // results contains rows returned by server
@@ -94,9 +97,11 @@ app.get('/getAllRoutes', async (req, res) => {
   }
 });
 
-app.get('/getAllLocationsFromRoute', async (req, res) => {
+app.get('/getRouteLocations', async (req, res) => {
   // A simple SELECT query
   try {
+    const { routeId = 0, userId = 0 } = req.query;
+
     const [results, fields] = await connection.query(
       //Mostrar todos los frames de la lista 'Viaje Santander' del usuario con id = 1 (usuario test)
       // Falta seleccionar los campos de *
@@ -112,8 +117,8 @@ app.get('/getAllLocationsFromRoute', async (req, res) => {
       INNER JOIN sponsors1 ON sponsors1.sponsors1_id = frames.frames_sponsors1_id
       INNER JOIN sponsors2 ON sponsors2.sponsors2_id = frames.frames_sponsors2_id
       INNER JOIN sponsors3 ON sponsors3.sponsors3_id = frames.frames_sponsors3_id
-      WHERE locationslist.locationslist_users_id = 1
-      AND locationslist.locationslist_id = 4;`
+      WHERE locationslist.locationslist_users_id = ${userId}
+      AND locationslist.locationslist_id = ${routeId};`
     );
     // console.log(locationsConverter(results)); // results contains rows returned by server
     // console.log(fields); // fields contains extra meta data about results, if available
@@ -125,8 +130,24 @@ app.get('/getAllLocationsFromRoute', async (req, res) => {
   }
 });
 
+app.get('/getLocationIsSaved', async (req, res) => {
+  const { locationId = 0, userId= 0 } = req.query;
+  // A simple SELECT query
+  try {
+    const [results, fields] = await connection.query(
+      //Mostrar si una localización se encuentra guardada por el usuario
+      // Falta seleccionar los campos de *
+      );
 
-app.post('/addLocationToSaved', async (req, res) => {
+    res.send(results);
+
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+
+app.post('/saveLocation', async (req, res) => {
   try {
     const [results, fields] = await connection.query(
       `INSERT INTO saved (saved_users_id, saved_frames_id) VALUES (1, 17);`
@@ -137,12 +158,14 @@ app.post('/addLocationToSaved', async (req, res) => {
   }
 });
 
-app.post('/removeLocationToSaved', async (req, res) => {
+app.delete('/deleteLocation', async (req, res) => {
   try {
+    const { locationId = 0, userId= 0 } = req.body;
     const [results, fields] = await connection.query(
-      `DELETE FROM saved WHERE saved_users_id = 1 AND saved_frames_id = 17;`
+      `DELETE FROM saved WHERE saved_users_id = ${userId} AND saved_frames_id = ${locationId};`
     );
     res.send(results);
+
   } catch (err) {
     console.log(err);
   }
@@ -181,7 +204,7 @@ app.post('/addLocationToRoute', async (req, res) => {
   }
 });
 
-app.post('/removeLocationToRoute', async (req, res) => {
+app.post('/removeLocationFromRoute', async (req, res) => {
   try {
     const [results, fields] = await connection.query(
       `DELETE FROM locationslistxframes WHERE locationslistxframes_locationslist_id = 9 AND locationslistxframes_frames_id = 22;`
@@ -192,7 +215,7 @@ app.post('/removeLocationToRoute', async (req, res) => {
   }
 });
 
-app.post('/createRouteWithLocation', async (req, res) => {
+app.post('/createInitializedRoute', async (req, res) => {
   try {
     const [results, fields] = await connection.query(
       `INSERT INTO locationslist (locationslist_name, locationslist_users_id) VALUES ('CustomTrip2', 1);`
@@ -200,13 +223,11 @@ app.post('/createRouteWithLocation', async (req, res) => {
     const [results1, fields1] = await connection.query(
       `INSERT INTO locationslistxframes (locationslistxframes_locationslist_id, locationslistxframes_frames_id) VALUES (LAST_INSERT_ID(), 22);`
     );
-    res.send('results');
+    res.send(results);
   } catch (err) {
     console.log(err);
   }
 });
-
-
 
 // Start the server
 app.listen(port, () => {
