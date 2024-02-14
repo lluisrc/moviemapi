@@ -7,5 +7,5 @@ export const routeConverter = (route) => {
 }
 
 export const routesConverter = (routes) => {
-    return Array.from(routes.map(route => { return locationConverter(route)}));
+    return Array.from(routes.map(route => { return routeConverter(route)}));
 }

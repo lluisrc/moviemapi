@@ -4,17 +4,17 @@ export const locationConverter = (location) => {
         if(`frames_frame${i}` in location && location[`frames_frame${i}`]) gallery.push(location[`frames_frame${i}`])
     }
     let sponsors = [];
-    for(let i = 1; i <= 3; i++){
-        if(`sponsors${i}_id` in location && location[`sponsors${i}_id`] && location[`sponsors${i}_id`] !== 3) sponsors.push({href: location[`sponsors${i}_url`], logo: location[`sponsors${i}_img`], alt: 'Sponsor logo'})
+    for(let i = 1; i <= 5; i++){
+        if(`sponsors${i}_id` in location && location[`sponsors${i}_id`] && location[`sponsors${i}_id`] !== 1) sponsors.push({href: location[`sponsors${i}_url`], logo: location[`sponsors${i}_img`], alt: 'Sponsor logo'})
     }
-    let links = [{href: `https://www.imdb.com/title/${location.files_imdb}/`, logo: 'imdb.png', alt: 'IMDb logo'}, {href: `https://www.justwatch.com/es/${location.files_filmserie === "film" ? "pelicula" : "serie"}/${location.files_wheretowatchurl}/`, logo: 'justWatch.png', alt: 'JustWatch logo'}];
+    let links = [{href: `https://www.imdb.com/title/${location.files_imdb}/`, logo: 'imdb.png', alt: 'IMDb logo'}, {href: `https://www.justwatch.com/es/${location.files_filmserie === "film" ? "pelicula" : "serie"}/${location.files_justwatchurl}/`, logo: 'justWatch.png', alt: 'JustWatch logo'}];
 
     return {
         id: location.frames_id,
         latitude: location.frames_latitude,
         longitude: location.frames_longitude,
         title: location.files_title,
-        director: location.files_director,
+        director: location.files_directorcreator,
         start: location.files_start,
         end: location.files_finish,
         producer: location.files_company,
