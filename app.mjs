@@ -34,6 +34,8 @@ app.get('/getLocations', async (req, res) => {
       INNER JOIN sponsors1 ON sponsors1.sponsors1_id = frames.frames_sponsors1_id
       INNER JOIN sponsors2 ON sponsors2.sponsors2_id = frames.frames_sponsors2_id
       INNER JOIN sponsors3 ON sponsors3.sponsors3_id = frames.frames_sponsors3_id
+      INNER JOIN sponsors4 ON sponsors4.sponsors4_id = frames.frames_sponsors4_id
+      INNER JOIN sponsors5 ON sponsors5.sponsors5_id = frames.frames_sponsors5_id
       ;`
     );
     res.send(locationsConverter(results));
@@ -60,6 +62,8 @@ app.get('/getSavedLocations', async (req, res) => {
       INNER JOIN sponsors1 ON sponsors1.sponsors1_id = frames.frames_sponsors1_id
       INNER JOIN sponsors2 ON sponsors2.sponsors2_id = frames.frames_sponsors2_id
       INNER JOIN sponsors3 ON sponsors3.sponsors3_id = frames.frames_sponsors3_id
+      INNER JOIN sponsors4 ON sponsors4.sponsors4_id = frames.frames_sponsors4_id
+      INNER JOIN sponsors5 ON sponsors5.sponsors5_id = frames.frames_sponsors5_id
       WHERE saved.saved_users_id = ${userId};`
     );
     res.send(locationsConverter(results));
